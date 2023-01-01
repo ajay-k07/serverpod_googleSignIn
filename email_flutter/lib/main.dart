@@ -8,7 +8,7 @@ import 'package:serverpod_flutter/serverpod_flutter.dart';
 // The client is set up to connect to a Serverpod running on a local server on
 // the default port. You will need to modify this to connect to staging or
 // production servers.
-var client = Client('http://localhost:8080/',
+var client = Client('http://10.0.2.2:8080/',
     authenticationKeyManager: FlutterAuthenticationKeyManager())
   ..connectivityMonitor = FlutterConnectivityMonitor();
 
@@ -43,7 +43,7 @@ class LoginPage extends StatelessWidget {
           redirectUri: Uri.parse(
             'http://localhost:5055',
           ),
-          clientId:
+          serverClientId:
               '266609471209-enfoefcuf3v491ogmqijm5fsp9oid8b7.apps.googleusercontent.com',
         ),
       ),
