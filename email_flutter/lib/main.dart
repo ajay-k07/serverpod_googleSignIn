@@ -1,4 +1,5 @@
 import 'package:email_client/email_client.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:serverpod_auth_google_flutter/serverpod_auth_google_flutter.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
@@ -8,7 +9,7 @@ import 'package:serverpod_flutter/serverpod_flutter.dart';
 // The client is set up to connect to a Serverpod running on a local server on
 // the default port. You will need to modify this to connect to staging or
 // production servers.
-var client = Client('http://144.24.151.239:8080/',
+var client = Client('http://localhost:8080/',
     authenticationKeyManager: FlutterAuthenticationKeyManager())
   ..connectivityMonitor = FlutterConnectivityMonitor();
 
@@ -30,23 +31,61 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SignInWithGoogleButton(
-          onSignedIn: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MyHomePage(title: 'Google SignIn'),
+        child: Column(
+          children: [
+            if (defaultTargetPlatform == TargetPlatform.android)
+              SignInWithGoogleButton(
+                onSignedIn: () => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const MyHomePage(title: 'Google SignIn'),
+                    ),
+                  )
+                },
+                caller: client.modules.auth,
+                redirectUri: Uri.parse(
+                  'http://localhost:5055',
+                ),
+                serverClientId: 'WEB_CLIENT_ID',
               ),
-            )
-          },
-          caller: client.modules.auth,
-          redirectUri: Uri.parse(
-            'http://localhost:5055',
-          ),
-          clientId:
-              '266609471209-t2547s6olcl3h8sdam1id0147nbj3ebj.apps.googleusercontent.com',
-          serverClientId:
-              '266609471209-enfoefcuf3v491ogmqijm5fsp9oid8b7.apps.googleusercontent.com',
+            if (defaultTargetPlatform == TargetPlatform.iOS)
+              SignInWithGoogleButton(
+                onSignedIn: () => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const MyHomePage(title: 'Google SignIn'),
+                    ),
+                  )
+                },
+                caller: client.modules.auth,
+                redirectUri: Uri.parse(
+                  'http://localhost:5055',
+                ),
+                serverClientId: 'WEB_CLIENT_ID',
+                clientId: 'IOS_CLIENT_ID',
+              ),
+            if (kIsWeb)
+              SignInWithGoogleButton(
+                onSignedIn: () => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const MyHomePage(title: 'Google SignIn'),
+                    ),
+                  )
+                },
+                caller: client.modules.auth,
+                redirectUri: Uri.parse(
+                  'http://localhost:5055',
+                ),
+                clientId: 'WEB_CLIENT_ID',
+              ),
+          ],
         ),
       ),
     );
